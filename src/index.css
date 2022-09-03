@@ -1,0 +1,82 @@
+*,
+*::after,
+* ::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.lbl-switch {
+  display: inline-block;
+  width: 55px;
+  height: 30px;
+  background: #aaa;
+  border-radius: 50px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+#btn-switch:checked ~ .lbl-switch {
+  background-color: #61a0ff;
+}
+
+.lbl-switch::after {
+  position: absolute;
+  content: "";
+  width: 22px;
+  height: 22px;
+  background: #fff;
+  top: 4px;
+  left: 5px;
+  transition: all 0.3s;
+  border-radius: 50%;
+}
+
+#btn-switch:checked ~ .lbl-switch::after {
+  left: 28px;
+}
+
+#btn-switch {
+  display: none;
+}
+
+.btnThemeLight {
+  color: #000;
+  padding: 8px 14px;
+  border: none;
+  background: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.btnThemeDark {
+  color: #fff;
+  padding: 8px 14px;
+  border: none;
+  background: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.themeSelectionLigth {
+  color: orange;
+}
+
+.themeSelectionDark {
+  color: #8273c9;
+}
