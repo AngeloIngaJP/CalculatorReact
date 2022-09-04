@@ -14,28 +14,16 @@ export const MyKeyboard = ({ themeBtn, setThemeBtn }) => {
   const [testResult, setTestResult] = useState("");
   const [numTest, setNumTest] = useState("");
 
-  const handleNumberPress = (buttonValue) => {
+  const handlePress = (buttonValue) => {
     if (result) {
       setResult(null);
     }
-    if (firstNumber.length < 10) {
-      setFirstNumber(firstNumber + buttonValue);
-    }
-    setNumTest(numTest + buttonValue);
-  };
-
-  const handleOperationClick = (buttonValue) => {
-    setOperation(buttonValue);
-    setSecondNumber(firstNumber);
-    setFirstNumber("");
     setNumTest(numTest + buttonValue);
   };
 
   const clear = () => {
-    setFirstNumber("");
-    setSecondNumber("");
-    setOperation("");
-    setResult(null);
+    setTestResult("");
+    setNumTest("");
   };
 
   const truncNumber = (x, posiciones = 10) => {
@@ -89,64 +77,18 @@ export const MyKeyboard = ({ themeBtn, setThemeBtn }) => {
     }
   };
 
-  const firstNumberDisplay = () => {
-    if (result !== null) {
-      return (
-        <p
-          style={
-            result < 99999
-              ? { ...Styles.screenFirstNumber, color: myColors.result }
-              : {
-                  ...Styles.screenFirstNumber,
-                  fontSize: 50,
-                  color: myColors.result
-                }
-          }
-        >
-          {result?.toString()}
-        </p>
-      );
-    }
-    if (firstNumber && firstNumber.length < 9) {
-      return <p style={Styles.screenFirstNumber}>{firstNumber}</p>;
-    }
-    if (firstNumber === "") {
-      return <p style={Styles.screenFirstNumber}>{"0"}</p>;
-    }
-    if (firstNumber.length > 8 && firstNumber.length < 12) {
-      return (
-        <p
-          style={{
-            ...Styles.screenFirstNumber,
-            fontSize: 40
-          }}
-        >
-          {firstNumber}
-        </p>
-      );
-    }
-    if (firstNumber.length > 12) {
-      return (
-        <p
-          style={{
-            ...Styles.screenFirstNumber,
-            fontSize: 30
-          }}
-        >
-          {firstNumber}
-        </p>
-      );
-    }
-  };
-
   useEffect(() => {
     if (numTest.length > 0) {
-      if (isNaN(numTest?.slice(-1))) {
-        console.log("no es", numTest, testResult);
-      } else {
-        setTestResult(eval(numTest));
-        console.log("si es", numTest, testResult);
+      let numTmp = numTest.replace(/(\b([0-9]+%))/g, "($1)");
+      numTmp = numTmp.replaceAll("%", "/100");
+      numTmp = numTmp.replaceAll("÷", "/");
+      numTmp = numTmp.replaceAll("×", "*");
+      console.log(numTmp);
+      if (!isNaN(numTmp?.slice(-1)) || numTmp?.slice(-1) === ")") {
+        setTestResult(eval(numTmp));
       }
+    } else {
+      setTestResult("");
     }
   }, [numTest]);
 
@@ -190,13 +132,13 @@ export const MyKeyboard = ({ themeBtn, setThemeBtn }) => {
             testResult.toString().length < 18
               ? {
                   ...Styles.screenFirstNumber,
-                  fontSize: 30,
+                  fontSize: 40,
                   color: myColors.result
                 }
               : testResult.toString().length >= 18
               ? {
                   ...Styles.screenFirstNumber,
-                  fontSize: 20,
+                  fontSize: 30,
                   color: myColors.result
                 }
               : {
@@ -212,24 +154,24 @@ export const MyKeyboard = ({ themeBtn, setThemeBtn }) => {
       <div style={{ display: "flex" }}>
         <div style={Styles.row}>
           <Button title="C" isGray onClick={clear} />
-          <Button title="7" onClick={() => handleNumberPress("7")} />
-          <Button title="4" onClick={() => handleNumberPress("4")} />
-          <Button title="1" onClick={() => handleNumberPress("1")} />
-          <Button title="％" onClick={() => handleOperationClick("％")} />
+          <Button title="7" onClick={() => handlePress("7")} />
+          <Button title="4" onClick={() => handlePress("4")} />
+          <Button title="1" onClick={() => handlePress("1")} />
+          <Button title="％" onClick={() => handlePress("%")} />
         </div>
         <div style={Styles.row}>
-          <Button title="÷" isBlue onClick={() => handleOperationClick("/")} />
-          <Button title="8" onClick={() => handleNumberPress("8")} />
-          <Button title="5" onClick={() => handleNumberPress("5")} />
-          <Button title="2" onClick={() => handleNumberPress("2")} />
-          <Button title="0" onClick={() => handleNumberPress("0")} />
+          <Button title="÷" isBlue onClick={() => handlePress("÷")} />
+          <Button title="8" onClick={() => handlePress("8")} />
+          <Button title="5" onClick={() => handlePress("5")} />
+          <Button title="2" onClick={() => handlePress("2")} />
+          <Button title="0" onClick={() => handlePress("0")} />
         </div>
         <div style={Styles.row}>
-          <Button title="×" isBlue onClick={() => handleOperationClick("*")} />
-          <Button title="9" onClick={() => handleNumberPress("9")} />
-          <Button title="6" onClick={() => handleNumberPress("6")} />
-          <Button title="3" onClick={() => handleNumberPress("3")} />
-          <Button title="." onClick={() => handleNumberPress(".")} />
+          <Button title="×" isBlue onClick={() => handlePress("×")} />
+          <Button title="9" onClick={() => handlePress("9")} />
+          <Button title="6" onClick={() => handlePress("6")} />
+          <Button title="3" onClick={() => handlePress("3")} />
+          <Button title="." onClick={() => handlePress(".")} />
         </div>
         <div style={Styles.row}>
           <Button
@@ -238,16 +180,8 @@ export const MyKeyboard = ({ themeBtn, setThemeBtn }) => {
             onClick={() => setNumTest(numTest.slice(0, -1))}
           />
 
-          <Button
-            title="-"
-            isBlue
-            onClick={
-              secondNumber
-                ? () => handleOperationClick("-")
-                : () => handleNumberPress("-")
-            }
-          />
-          <Button title="+" isBlue onClick={() => handleOperationClick("+")} />
+          <Button title="-" isBlue onClick={() => handlePress("-")} />
+          <Button title="+" isBlue onClick={() => handlePress("+")} />
           <Button title="=" isBlue onClick={() => getResult()} />
         </div>
       </div>
