@@ -15,10 +15,45 @@ export const MyKeyboard = ({ themeBtn, setThemeBtn }) => {
   const [numTest, setNumTest] = useState("");
 
   const handlePress = (buttonValue) => {
+    if (numTest === "") {
+      if (
+        buttonValue !== "×" &&
+        buttonValue !== "÷" &&
+        buttonValue !== "+" &&
+        buttonValue !== "%"
+      ) {
+        setNumTest(numTest + buttonValue);
+      }
+    } else {
+      if (numTest.slice(-1) === "×" || numTest.slice(-1) === "÷") {
+        if (
+          buttonValue !== "×" &&
+          buttonValue !== "÷" &&
+          buttonValue !== "%" &&
+          buttonValue !== "+"
+        ) {
+          setNumTest(numTest + buttonValue);
+        }
+      } else {
+        if (numTest.slice(-1) === "+" || numTest.slice(-1) === "-") {
+          if (
+            buttonValue !== "×" &&
+            buttonValue !== "÷" &&
+            buttonValue !== "%" &&
+            buttonValue !== "+" &&
+            buttonValue !== "-"
+          ) {
+            setNumTest(numTest + buttonValue);
+          }
+        } else {
+          setNumTest(numTest + buttonValue);
+        }
+      }
+    }
+
     if (result) {
       setResult(null);
     }
-    setNumTest(numTest + buttonValue);
   };
 
   const clear = () => {
@@ -84,8 +119,12 @@ export const MyKeyboard = ({ themeBtn, setThemeBtn }) => {
       numTmp = numTmp.replaceAll("÷", "/");
       numTmp = numTmp.replaceAll("×", "*");
       console.log(numTmp);
-      if (!isNaN(numTmp?.slice(-1)) || numTmp?.slice(-1) === ")") {
-        setTestResult(eval(numTmp));
+      try {
+        if (!isNaN(numTmp?.slice(-1)) || numTmp?.slice(-1) === ")") {
+          setTestResult(eval(numTmp));
+        }
+      } catch (error) {
+        setTestResult("Error");
       }
     } else {
       setTestResult("");
@@ -132,13 +171,13 @@ export const MyKeyboard = ({ themeBtn, setThemeBtn }) => {
             testResult.toString().length < 18
               ? {
                   ...Styles.screenFirstNumber,
-                  fontSize: 40,
+                  fontSize: 35,
                   color: myColors.result
                 }
               : testResult.toString().length >= 18
               ? {
                   ...Styles.screenFirstNumber,
-                  fontSize: 30,
+                  fontSize: 27,
                   color: myColors.result
                 }
               : {
